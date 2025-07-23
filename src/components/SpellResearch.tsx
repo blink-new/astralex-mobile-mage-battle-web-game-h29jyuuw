@@ -179,8 +179,10 @@ export default function SpellResearch({ character, onResourceUpdate }: SpellRese
 
   const loadUserSpells = useCallback(async () => {
     try {
+      // Get the current user first
+      const user = await blink.auth.me();
       const spells = await blink.db.character_spells.list({
-        where: { userId: character.id },
+        where: { userId: user.id },
         orderBy: { createdAt: 'asc' }
       });
       setUserSpells(spells);
@@ -189,7 +191,7 @@ export default function SpellResearch({ character, onResourceUpdate }: SpellRese
     } finally {
       setLoading(false);
     }
-  }, [character.id]);
+  }, []);
 
   useEffect(() => {
     loadUserSpells();
@@ -221,10 +223,12 @@ export default function SpellResearch({ character, onResourceUpdate }: SpellRese
     setResearching(spell.id);
     
     try {
+      // Get the current user first
+      const user = await blink.auth.me();
       // Create spell research record
       await blink.db.character_spells.create({
         id: `spell_${Date.now()}`,
-        userId: character.id,
+        userId: user.id,
         spellId: spell.id,
         createdAt: new Date().toISOString()
       });

@@ -141,15 +141,17 @@ export default function BattleSystem({ character, onResourceUpdate }: BattleSyst
 
   const loadUserSpells = useCallback(async () => {
     try {
+      // Get the current user first
+      const user = await blink.auth.me();
       const spells = await blink.db.character_spells.list({
-        where: { userId: character.id },
+        where: { userId: user.id },
         limit: 6 // Max 6 attack spells
       });
       setUserSpells(spells);
     } catch (error) {
       console.error('Error loading spells:', error);
     }
-  }, [character.id]);
+  }, []);
 
   useEffect(() => {
     loadUserSpells();
@@ -221,10 +223,13 @@ export default function BattleSystem({ character, onResourceUpdate }: BattleSyst
   };
 
   const playerAttack = (spellId: string) => {
-    if (!battleState.enemy || battleState.turn !== 'player') return;
+    if (!battleState.enemy || battleState.turn !== 'player' || battleState.result) return;
 
     const spellData = getSpellData(spellId);
-    if (!spellData) return;
+    if (!spellData) {
+      toast.error('Spell not found!');
+      return;
+    }
 
     if (battleState.playerMana < spellData.manaCost) {
       toast.error('Not enough mana!');
@@ -265,7 +270,7 @@ export default function BattleSystem({ character, onResourceUpdate }: BattleSyst
       }, 1000);
     } else {
       // Enemy turn
-      setTimeout(enemyTurn, 1500);
+      setTimeout(() => enemyTurn(), 1500);
     }
   };
 

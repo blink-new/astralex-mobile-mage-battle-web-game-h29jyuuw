@@ -123,8 +123,10 @@ export default function GuildSystem({ character }: GuildSystemProps) {
 
   const loadUserGuild = useCallback(async () => {
     try {
+      // Get the current user first
+      const user = await blink.auth.me();
       const guilds = await blink.db.guild_members.list({
-        where: { userId: character.id },
+        where: { userId: user.id },
         limit: 1
       });
       
@@ -137,7 +139,7 @@ export default function GuildSystem({ character }: GuildSystemProps) {
     } finally {
       setLoading(false);
     }
-  }, [character.id]);
+  }, []);
 
   useEffect(() => {
     loadUserGuild();
@@ -147,10 +149,12 @@ export default function GuildSystem({ character }: GuildSystemProps) {
     setJoining(guild.id);
     
     try {
+      // Get the current user first
+      const user = await blink.auth.me();
       // Create guild membership
       await blink.db.guild_members.create({
         id: `guild_member_${Date.now()}`,
-        userId: character.id,
+        userId: user.id,
         guildId: guild.id,
         role: 'member',
         joinedAt: new Date().toISOString()

@@ -117,9 +117,8 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    setUser(null);
-    setCharacter(null);
-    setCurrentScreen('auth');
+    blink.auth.logout();
+    // The auth state change will handle the rest
   };
 
   if (loading) {

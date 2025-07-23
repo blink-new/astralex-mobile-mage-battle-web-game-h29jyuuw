@@ -95,8 +95,10 @@ export default function BuildingManagement({ character, onResourceUpdate }: Buil
 
   const loadUserBuildings = useCallback(async () => {
     try {
+      // Get the current user first
+      const user = await blink.auth.me();
       const buildings = await blink.db.buildings.list({
-        where: { userId: character.id },
+        where: { userId: user.id },
         orderBy: { createdAt: 'asc' }
       });
       setUserBuildings(buildings);
@@ -105,7 +107,7 @@ export default function BuildingManagement({ character, onResourceUpdate }: Buil
     } finally {
       setLoading(false);
     }
-  }, [character.id]);
+  }, []);
 
   useEffect(() => {
     loadUserBuildings();
@@ -135,10 +137,12 @@ export default function BuildingManagement({ character, onResourceUpdate }: Buil
     setUpgrading(buildingType.id);
     
     try {
+      // Get the current user first
+      const user = await blink.auth.me();
       // Create building
       await blink.db.buildings.create({
         id: `building_${Date.now()}`,
-        userId: character.id,
+        userId: user.id,
         type: buildingType.type,
         level: 1,
         createdAt: new Date().toISOString()

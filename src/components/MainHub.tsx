@@ -53,16 +53,21 @@ export default function MainHub({ character, onCharacterUpdate, onLogout }: Main
   const elementGradient = elementGradients[character.element as keyof typeof elementGradients] || 'from-gray-500 to-gray-700';
 
   const handleLogout = () => {
-    blink.auth.logout();
-    onLogout();
+    onLogout(); // This will call blink.auth.logout() in the parent
   };
 
   const updateCharacterResource = async (updates: Partial<Character>) => {
     try {
+      // Update the character in the database
       await blink.db.characters.update(character.id, updates);
+      // Update the local state
       onCharacterUpdate({ ...character, ...updates });
     } catch (error) {
       console.error('Error updating character:', error);
+      // Show error to user
+      import('react-hot-toast').then(({ default: toast }) => {
+        toast.error('Failed to update character resources');
+      });
     }
   };
 
