@@ -4,6 +4,7 @@ import { blink } from './blink/client';
 import { MagicalBackground } from './components/MagicalBackground';
 import AuthScreen from './components/AuthScreen';
 import CharacterCreation from './components/CharacterCreation';
+import MainHub from './components/MainHub';
 
 interface User {
   id: string;
@@ -65,6 +66,10 @@ export default function App() {
       
       if (state.user && !state.isLoading) {
         loadCharacter(state.user.id);
+      } else if (!state.user && !state.isLoading) {
+        // User logged out, reset everything
+        setCharacter(null);
+        setCurrentScreen('auth');
       }
     });
     
@@ -105,6 +110,18 @@ export default function App() {
     }
   };
 
+  const handleCharacterUpdate = (updates: Partial<Character>) => {
+    if (character) {
+      setCharacter({ ...character, ...updates });
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setCharacter(null);
+    setCurrentScreen('auth');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black flex items-center justify-center">
@@ -136,43 +153,11 @@ export default function App() {
       )}
       
       {currentScreen === 'main-hub' && character && (
-        <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent mb-4">
-              Welcome to AstralEX!
-            </h1>
-            <div className="bg-gray-800/50 rounded-xl p-6 max-w-md">
-              <h2 className="text-xl font-semibold mb-2">Character Created!</h2>
-              <p className="text-gray-300 mb-4">
-                Welcome, <span className="text-orange-400 font-semibold">{character.username}</span>
-              </p>
-              <p className="text-gray-400 text-sm mb-4">
-                Element: <span className="capitalize text-purple-400">{character.element}</span> Mage
-              </p>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="bg-gray-700/50 rounded-lg p-3">
-                  <p className="text-yellow-400 font-semibold">{character.gold.toLocaleString()}</p>
-                  <p className="text-gray-400">Gold</p>
-                </div>
-                <div className="bg-gray-700/50 rounded-lg p-3">
-                  <p className="text-blue-400 font-semibold">{character.mana}</p>
-                  <p className="text-gray-400">Mana</p>
-                </div>
-                <div className="bg-gray-700/50 rounded-lg p-3">
-                  <p className="text-green-400 font-semibold">{character.turns}</p>
-                  <p className="text-gray-400">Turns</p>
-                </div>
-                <div className="bg-gray-700/50 rounded-lg p-3">
-                  <p className="text-purple-400 font-semibold">{character.diamonds}</p>
-                  <p className="text-gray-400">Diamonds</p>
-                </div>
-              </div>
-              <p className="text-gray-500 text-xs mt-4">
-                Full game features coming soon! Your character is saved and ready.
-              </p>
-            </div>
-          </div>
-        </div>
+        <MainHub 
+          character={character} 
+          onCharacterUpdate={handleCharacterUpdate}
+          onLogout={handleLogout}
+        />
       )}
       
       <Toaster position="top-center" />
