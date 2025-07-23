@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* AstralEX Dark Theme Colors */
+    --background: 210 11% 10%; /* #1a1a1a */
+    --background-dark: 210 11% 5%; /* #0d0d0d */
+    --background-secondary: 210 11% 16%; /* #2a2a2a */
+    --foreground: 0 0% 100%; /* #ffffff */
+    --foreground-muted: 0 0% 69%; /* #b0b0b0 */
+    --foreground-dark: 0 0% 40%; /* #666666 */
+    --border: 210 11% 23%; /* #3a3a3a */
+    
+    /* Elemental Colors */
+    --fire-start: 14 100% 60%; /* #ff6b35 */
+    --fire-end: 348 75% 55%; /* #d63447 */
+    --nature-start: 145 63% 42%; /* #27ae60 */
+    --nature-end: 145 63% 38%; /* #229954 */
+    --water-start: 204 70% 53%; /* #3498db */
+    --water-end: 207 90% 54%; /* #2980b9 */
+    --light-start: 48 89% 60%; /* #f1c40f */
+    --light-end: 36 77% 49%; /* #d68910 */
+    --dark-start: 282 44% 47%; /* #8e44ad */
+    --dark-end: 283 39% 53%; /* #9b59b6 */
+    
+    /* ShadCN Variables */
+    --card: 210 11% 10%;
+    --card-foreground: 0 0% 100%;
+    --popover: 210 11% 10%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 14 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 11% 16%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 11% 16%;
+    --muted-foreground: 0 0% 69%;
+    --accent: 14 100% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --input: 210 11% 16%;
+    --ring: 14 100% 60%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-gradient-to-b from-[#1a1a1a] to-[#0d0d0d] text-white font-chakra min-h-screen;
+
+    font-family: 'Chakra Petch', sans-serif;
+  }
+  
+  /* Mobile-first container */
+  .game-container {
+    @apply max-w-sm mx-auto min-h-screen relative;
+  }
+  
+  /* Elemental gradients */
+  .gradient-fire {
+    background: linear-gradient(135deg, hsl(var(--fire-start)), hsl(var(--fire-end)));
+  }
+  
+  .gradient-nature {
+    background: linear-gradient(135deg, hsl(var(--nature-start)), hsl(var(--nature-end)));
+  }
+  
+  .gradient-water {
+    background: linear-gradient(135deg, hsl(var(--water-start)), hsl(var(--water-end)));
+  }
+  
+  .gradient-light {
+    background: linear-gradient(135deg, hsl(var(--light-start)), hsl(var(--light-end)));
+  }
+  
+  .gradient-dark {
+    background: linear-gradient(135deg, hsl(var(--dark-start)), hsl(var(--dark-end)));
+  }
+  
+  /* Magical particle animation */
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(180deg); }
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgb(255 107 53 / 30%); }
+    50% { box-shadow: 0 0 40px rgb(255 107 53 / 60%); }
+  }
+  
+  .magical-particle {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .glow-effect {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  /* Touch-friendly buttons */
+  .touch-button {
+    @apply min-h-[44px] min-w-[44px] rounded-lg transition-all duration-300;
+  }
+  
+  /* Card styling */
+  .magic-card {
+    @apply bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl p-4 backdrop-blur-sm;
+  }
+}
